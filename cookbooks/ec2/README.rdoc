@@ -1,0 +1,12 @@
+= DESCRIPTION:
+
+Recipe raid_ephemeral:
+
+RAID the ephemeral EC2 drives into a single MD disk.
+
+= REQUIREMENTS:
+
+= ATTRIBUTES:
+
+= USAGE:
+
