@@ -1,0 +1,7 @@
+.rvmrc
+cookbooks/*/metadata.json
+site-cookbooks/*/metadata.json
+.bundle
+roles/*.json
+nodes/*.json
+auth.cfg
