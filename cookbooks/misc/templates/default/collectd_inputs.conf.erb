@@ -1,0 +1,33 @@
+#
+# Default collectd plugins
+#
+LoadPlugin syslog
+
+<Plugin syslog>
+        LogLevel info
+</Plugin>
+
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin entropy
+LoadPlugin interface
+LoadPlugin irq
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin processes
+LoadPlugin users
+
+<Plugin interface>
+        Interface "eth0"
+        IgnoreSelected false
+</Plugin>
+
+<Plugin df>
+        FSType "ext2"
+        FSType "ext3"
+        FSType "ext4"
+        FSType "xfs"
+
+        IgnoreSelected false
+</Plugin>
