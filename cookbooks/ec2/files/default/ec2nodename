@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Grab the nodename from EC2 instance meta-data.
+#
+
+DEFAULT_HOST=`hostname`
+
+TMP=`mktemp`
+
+curl -s http://169.254.169.254/latest/user-data > $TMP
+if [ $? -ne 0 ]; then
+	rm -f $TMP
+	echo $DEFAULT_HOST
+	exit 0
+fi
+
+NODENAME=`egrep '^:node_name: ' $TMP | cut -d ' ' -f 2`
+INSTANCE=`egrep '^:instance: ' $TMP | cut -d ' ' -f 2`
+
+rm -f $TMP
+
+if [ -z "$INSTANCE" ]; then
+	echo $NODENAME
+else
+	echo "$NODENAME-$INSTANCE"
+fi
