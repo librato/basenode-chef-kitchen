@@ -22,10 +22,10 @@ run_list(["recipe[apt]",
           "recipe[ec2::nodename]",
           "recipe[ec2::tools]",
           "recipe[ntp]",
-          "recipe[postfix::forward]",
+          "role[postfix]",
           "recipe[collectd]",
           "recipe[collectd-librato::build]",
           "recipe[misc::collectd]",
-          "recipe[papertrail]",
+          "role[papertrail]",
           "recipe[basenode::setup_firstboot]"
           ])
