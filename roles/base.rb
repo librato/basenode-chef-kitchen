@@ -26,5 +26,6 @@ run_list(["recipe[apt]",
           "recipe[collectd]",
           "recipe[collectd-librato::build]",
           "recipe[misc::collectd]",
+          "recipe[papertrail]",
           "recipe[basenode::setup_firstboot]"
           ])
