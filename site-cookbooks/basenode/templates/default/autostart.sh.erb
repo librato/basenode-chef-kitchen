@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+
+DISABLE_FILE="/root/.ran_firstboot"
+
+# If the node is restarted, don't rerun
+if [ -e $DISABLE_FILE ]; then
+        exit 0
+fi
+
+AUTOSTART=`curl -s http://169.254.169.254/latest/user-data | egrep '^:autostart: ' | cut -d ' ' -f 2`
+
+if [ "$AUTOSTART" != "true" ]; then
+	exit 0
+fi
+
+touch $DISABLE_FILE
+
+LOGFILE="<%= @log_file %>"
+AUTOSTART_DIR="<%= @autostart_dir %>"
+AUTOSTART_FILES=`ls $AUTOSTART_DIR/`
+
+cd $AUTOSTART_DIR
+for FILE in $AUTOSTART_FILES; do
+	echo ">> Running autostart file $FILE" >> $LOGFILE
+
+	./$FILE >> $LOGFILE 2>&1
+done
+
+
+# Local Variables:
+# mode: sh
+# End:

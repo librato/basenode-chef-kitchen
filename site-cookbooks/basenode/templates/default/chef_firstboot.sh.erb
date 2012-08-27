@@ -1,0 +1,19 @@
+
+TMP=`mktemp`
+
+cat > $TMP <<EOH
+{ "run_list": "role[<%= @role %>]" }
+EOH
+
+cd <%= @chef_solo_dir %> && chef-solo -l info -j $TMP
+
+if [ $? -ne 0 ]; then
+	echo 'FAILED TO RUN CHEF CONFIG'
+	exit 1
+fi
+
+rm -f $TMP
+
+# Local Variables:
+# mode: sh
+# End:
