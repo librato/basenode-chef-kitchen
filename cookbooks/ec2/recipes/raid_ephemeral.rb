@@ -48,6 +48,13 @@ ruby_block "format_drives" do
     fmtcmd=",,L\n"
     devices.each do |dev|
       system("umount #{dev}")
+
+      # Clear "invalid flag 0x0000 of partition table 4" by issuing a
+      # write
+      IO.popen("fdisk -c -u #{dev}", "w") do |f|
+        f.puts "w\n"
+      end
+
       IO.popen("sfdisk -L --no-reread #{dev}", "w") do |f|
         f.puts fmtcmd
       end
@@ -66,6 +73,8 @@ ruby_block "create_raid" do
     # Get partitions
     parts = %x{ls /dev/sd*[0-9] /dev/xvd*[0-9] 2> /dev/null}.split("\n").
       delete_if{|d| ["/dev/sda1", "/dev/xvda1"].include?(d)}
+    parts = parts.sort
+
     Chef::Log.info("Partitions to raid: #{parts.join(",")}")
 
     # Unmount
@@ -87,21 +96,41 @@ ruby_block "create_raid" do
 
     args << "--raid-devices #{parts.length}"
 
-    r = system("mdadm #{args.join(' ')} #{parts.join(' ')}")
-    raise "Failed to create raid" unless r
+    #
+    # We try up to 3 times to make this raid array.
+    #
+    try = 1
+    tries = 3
+    begin
+      failed_create = false
 
-    # Scan
-    File.open("/etc/mdadm/mdadm.conf", "a") do |f|
-      f << "DEVICE #{parts.join(' ')}\n"
-    end
-    r = system("mdadm --examine --scan >> /etc/mdadm/mdadm.conf")
-    raise "Failed to initialize raid device" unless r
+      r = system("mdadm #{args.join(' ')} #{parts.join(' ')}")
+      puts "Failed to create raid" unless r
 
-    r = system("blockdev --setra #{node[:ec2][:raid_read_ahead]} /dev/md0")
-    raise "Failed to set read-ahead" unless r
+      # Scan
+      File.open("/etc/mdadm/mdadm.conf", "w") do |f|
+        f << "DEVICE #{parts.join(' ')}\n"
+      end
+      system("sleep 5")
 
-    r = system("mkfs.xfs -f /dev/md0")
-    raise "Failed to format raid device" unless r
+      r = system("mdadm --detail --scan >> /etc/mdadm/mdadm.conf")
+      puts "Failed to initialize raid device" unless r
+      system("sleep 10")
+
+      r = system("blockdev --setra #{node[:ec2][:raid_read_ahead]} /dev/md0")
+      puts "Failed to set read-ahead" unless r
+      system("sleep 10")
+
+      r = system("mkfs.xfs -f /dev/md0")
+      unless r
+        puts "Failed to format raid device"
+        system("mdadm --stop /dev/md0")
+        system("mdadm --zero-superblock #{parts.first}")
+
+        try += 1
+        failed_create = true
+      end
+    end while failed_create && try <= tries
   end
 
   not_if {File.exist?("/dev/md0")}
