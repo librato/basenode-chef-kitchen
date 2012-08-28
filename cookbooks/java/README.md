@@ -10,6 +10,31 @@ packages.
 The `java_ark` LWPR may move to its own cookbook at some point in the
 future as its functionality is useful for other purposes.
 
+**IMPORTANT NOTE** As of 26 March 2012 you can no longer directly download
+the JDK from Oracle's website without using a full-fledged browser.
+For that reason, the java::oracle recipe forces you to set up a
+private repository accessible by HTTP. It is best to override the
+dummy URL using a role.
+
+Example
+
+roles/base.rb
+
+    normal_attributes(
+      :java => {
+        :jdk => {
+          "6" => {
+            :x86_64 => {
+              :url => "http://hqlprrepo01.hq.un.fao.org/corporate/jdk-6u30-linux-x64.bin"
+            }
+          }
+        }
+      }
+    )
+
+You are most encouraged to voice your complaints to Oracle and/or
+switch to OpenJDK.
+
 Requirements
 ============
 
@@ -26,13 +51,17 @@ Attributes
 
 See `attributes/default.rb` for default values.
 
-* `node["java"]["install_flavor"]` - Flavor of JVM you would like installed (`oracle` or `openjdk`), default `openjdk`.
+* `node["java"]["install_flavor"]` - Flavor of JVM you would like installed (`oracle` or
+`openjdk`), default `openjdk`.
 * `node['java']['java_home']` - Default location of the "`$JAVA_HOME`".
-* `node['java']['tarball']` - name of the tarball to retrieve from your corporate repository default `jdk1.6.0_29_i386.tar.gz`
-* `node['java']['tarball_checksum']` - checksum for the tarball, if you use a different tarball, you also need to create a new sha256 checksum
-* `node['java']['jdk']` - version and architecture specific attributes
-  for setting the URL on Oracle's site for the JDK, and the checksum
-  of the .tar.gz.
+* `node['java']['tarball']` - Name of the tarball to retrieve from your corporate
+repository default `jdk1.6.0_29_i386.tar.gz`
+* `node['java']['tarball_checksum']` - Checksum for the tarball, if you use a different
+tarball, you also need to create a new sha256 checksum
+* `node['java']['jdk']` - Version and architecture specific attributes for setting the
+URL on Oracle's site for the JDK, and the checksum of the .tar.gz.
+* `node['java']['remove_deprecated_packages']` - Removes the now deprecated Ubuntu JDK
+packages from the system, default `false`
 
 Recipes
 =======
@@ -155,16 +184,6 @@ To install Oracle flavored Java on Debian or Ubuntu override the `node['java']['
     run_list(
       "recipe[java]"
     )
-
-Changes
-=======
-
-## v1.4.0:
-
-* [COOK-858] - numerous updates: handle jdk6 and 7, switch from sun to
-  oracle, make openjdk default, add `java_ark` LWRP.
-* [COOK-942] - FreeBSD support
-* [COOK-520] - ArchLinux support
 
 License and Author
 ==================
