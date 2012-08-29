@@ -36,5 +36,16 @@ template chefbootsh do
   source "chef_firstboot.sh.erb"
   owner "root"
   mode "0755"
-  variables ({:role => "firstboot", :chef_solo_dir => "/var/chef-solo"})
+  variables ({ :role => "firstboot",
+               :chef_solo_dir => "/var/chef/basenode-kitchen"})
+end
+
+# Copy chef kitchen to backup location
+bash "backup_chef_kitchen" do
+  currloc = %x{cat /etc/chef/solo.rb | egrep ^role_path | cut -d ' ' -f 2}.chomp.
+    gsub('"', '').gsub("/roles", "")
+  code <<EOH
+mkdir -p /var/chef && \
+cp -r #{currloc} /var/chef/basenode-kitchen
+EOH
 end

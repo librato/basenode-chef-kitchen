@@ -5,6 +5,15 @@ cat > $TMP <<EOH
 { "run_list": "role[<%= @role %>]" }
 EOH
 
+cat > /etc/chef/solo.rb <<EOF
+file_cache_path "<%= @chef_solo_dir %>/cache"
+cookbook_path ["<%= @chef_solo_dir %>/cookbooks", "<%= @chef_solo_dir %>/site-cookbooks"]
+role_path "<%= @chef_solo_dir %>/roles"
+data_bag_path "<%= @chef_solo_dir %>/data_bags"
+environment "_default"
+verbose_logging false
+EOF
+
 cd <%= @chef_solo_dir %> && chef-solo -l info -j $TMP
 
 if [ $? -ne 0 ]; then
