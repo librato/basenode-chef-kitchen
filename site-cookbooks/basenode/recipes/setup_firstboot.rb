@@ -1,3 +1,4 @@
+include_recipe "basenode"
 
 directory node[:basenode][:base_dir] do
   action :create

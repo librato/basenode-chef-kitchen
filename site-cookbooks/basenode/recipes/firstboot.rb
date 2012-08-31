@@ -30,3 +30,21 @@ sed -i -e 's/%%HOSTNAME%%/#{nodename}/g' /etc/collectd/collectd.conf && \
 /etc/init.d/collectd restart
 EOH
 end
+
+# Set PS1
+bash "set_ps1" do
+  code <<EOH
+echo 'export PS1="\\u@#{nodename}:\\w# "' >> /root/.bashrc
+echo 'export PS1="\\u@#{nodename}:\\w$ "' >> ~ubuntu/.bashrc
+echo 'export PS1="\\u@#{nodename}:\\w$ "' >> ~metrics/.bashrc
+EOH
+end
+
+# Add the history format hack so that it shows dates on each command
+bash "add_timestamp_to_history" do
+  code <<EOH
+echo "export HISTTIMEFORMAT='%F %T '" >> /etc/bash.bashrc
+echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
+EOH
+end
+
