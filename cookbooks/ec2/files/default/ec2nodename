@@ -19,7 +19,10 @@ INSTANCE=`egrep '^:instance: ' $TMP | cut -d ' ' -f 2`
 
 rm -f $TMP
 
-if [ -z "$INSTANCE" ]; then
+
+if [ -z "$NODENAME" ]; then
+	echo $DEFAULT_HOST
+elif [ -z "$INSTANCE" ]; then
 	echo $NODENAME
 else
 	echo "$NODENAME-$INSTANCE"
