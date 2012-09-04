@@ -36,7 +36,6 @@ bash "set_ps1" do
   code <<EOH
 echo 'export PS1="\\u@#{nodename}:\\w# "' >> /root/.bashrc
 echo 'export PS1="\\u@#{nodename}:\\w$ "' >> ~ubuntu/.bashrc
-echo 'export PS1="\\u@#{nodename}:\\w$ "' >> ~metrics/.bashrc
 EOH
 end
 
