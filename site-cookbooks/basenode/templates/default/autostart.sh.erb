@@ -25,6 +25,10 @@ for FILE in $AUTOSTART_FILES; do
 	echo ">> Running autostart file $FILE" >> $LOGFILE
 
 	./$FILE >> $LOGFILE 2>&1
+	if [ $? -ne 0 ]; then
+		echo ">> Quitting autostart early due to failure" >> $LOGFILE
+		break
+	fi
 done
 
 
