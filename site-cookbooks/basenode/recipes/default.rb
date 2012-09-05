@@ -11,6 +11,8 @@ package "libcurl4-openssl-dev"
 package "gawk"
 package "libsasl2-dev"
 package "mailutils"
+package "sysstat"
+package "iftop"
 
 cookbook_file "/usr/local/bin/run_with_env.sh" do
   owner "root"
