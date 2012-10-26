@@ -31,6 +31,9 @@ sed -i -e 's/%%HOSTNAME%%/#{nodename}/g' /etc/collectd/collectd.conf && \
 EOH
 end
 
+# Merge collectd librato configuration from userdata
+node[:collectd_librato] = userdata[:collectd_librato]
+
 # Set PS1
 bash "set_ps1" do
   code <<EOH
