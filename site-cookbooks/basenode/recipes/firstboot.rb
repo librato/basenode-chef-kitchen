@@ -24,12 +24,7 @@ EOH
 end
 
 # Update the collectd hostname
-bash "update_collectd_hostname" do
-  code <<EOH
-sed -i -e 's/%%HOSTNAME%%/#{nodename}/g' /etc/collectd/collectd.conf && \
-/etc/init.d/collectd restart
-EOH
-end
+noded[:collectd][:hostname] = nodename
 
 # Merge collectd librato configuration from userdata
 node[:collectd_librato] = userdata[:collectd_librato]
