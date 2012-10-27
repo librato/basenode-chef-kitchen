@@ -24,7 +24,7 @@ EOH
 end
 
 # Update the collectd hostname
-noded[:collectd][:hostname] = nodename
+node[:collectd][:hostname] = nodename
 
 # Merge collectd librato configuration from userdata
 node[:collectd_librato] = userdata[:collectd_librato]
