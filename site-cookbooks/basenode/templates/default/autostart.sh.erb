@@ -20,6 +20,10 @@ LOGFILE="<%= @log_file %>"
 AUTOSTART_DIR="<%= @autostart_dir %>"
 AUTOSTART_FILES=`ls $AUTOSTART_DIR/`
 
+# Ensure the log file is not readable (may contain secrets)
+touch $LOGFILE
+chmod 0600 $LOGFILE
+
 cd $AUTOSTART_DIR
 for FILE in $AUTOSTART_FILES; do
 	echo ">> Running autostart file $FILE" >> $LOGFILE
