@@ -27,14 +27,14 @@ def get_an_id(uuid):
             max_id = int(item['id'])
 
     max_id = max_id + 1
-    itemname = 'new_broker_id_' + str(max_id)
+    itemname = 'new_name_id_' + str(max_id)
     item = domain.new_item(itemname)
     item['id'] = max_id
     item['owner'] = uuid
     item.save()
 
     item = domain.get_item(itemname, consistent_read=True)
-    if item['owner'] != uuid:
+    if item == None or item['owner'] != uuid:
         return None
     else:
         return max_id
