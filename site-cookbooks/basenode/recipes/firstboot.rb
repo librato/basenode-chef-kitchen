@@ -15,7 +15,7 @@ nodename = ""
 
 # Try to acquire a new unique instance ID
 if userdata[:uniq_name_gen]
-  ruby_block do
+  ruby_block "generate_unique_name" do
     block do
       broker_id = nil
       1.upto(3) do
