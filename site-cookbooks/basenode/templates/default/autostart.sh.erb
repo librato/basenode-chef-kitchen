@@ -21,6 +21,32 @@ LOGFILE="<%= @log_file %>"
 AUTOSTART_DIR="<%= @autostart_dir %>"
 AUTOSTART_FILES=`ls $AUTOSTART_DIR/`
 
+MAX_SCRIPT_TIME_SECS=<%= @max_script_time_secs %>
+
+function run_script()
+{
+	SCRIPT="$1"
+
+	$SCRIPT >> $LOGFILE 2>&1 &
+	PID=$!
+
+	ITER=0
+	while [ $ITER -lt $MAX_SCRIPT_TIME_SECS ]; do
+		if [ ! -e /proc/$PID ]; then
+			wait $PID
+			return 0
+		fi
+
+		sleep 1
+		$ITER=$(( $ITER + 1 ))
+	done
+
+	echo "ERROR: Timed out running: $SCRIPT" >> $LOGFILE
+	kill -9 $PID > /dev/null
+	wait $PID
+	return 1
+}
+
 # Ensure the log file is not readable (may contain secrets)
 touch $LOGFILE
 chmod 0600 $LOGFILE
@@ -30,7 +56,7 @@ cd $AUTOSTART_DIR
 for FILE in $AUTOSTART_FILES; do
 	echo ">> Running autostart file $FILE" >> $LOGFILE
 
-	./$FILE >> $LOGFILE 2>&1
+	run_script "$PWD/$FILE"
 	if [ $? -ne 0 ]; then
 		echo ">> Quitting autostart early due to failure" >> $LOGFILE
 		EXIT_STATUS=1

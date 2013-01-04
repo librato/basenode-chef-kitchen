@@ -20,7 +20,8 @@ template autostartsh do
   source "autostart.sh.erb"
   mode "0755"
   variables({ :autostart_dir => autostartdir,
-              :log_file => "/tmp/autostart.log"})
+              :log_file => "/tmp/autostart.log",
+              :max_script_time_secs => 420 })
 end
 
 bash "add_to_rclocal" do
