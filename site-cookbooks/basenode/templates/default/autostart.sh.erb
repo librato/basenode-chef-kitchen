@@ -9,10 +9,11 @@ if [ -e $DISABLE_FILE ]; then
 fi
 
 AUTOSTART=`curl -s http://169.254.169.254/latest/user-data | egrep '^:autostart: ' | cut -d ' ' -f 2`
-
 if [ "$AUTOSTART" != "true" ]; then
 	exit 0
 fi
+
+AUTOSTART_TERMINATE=`curl -s http://169.254.169.254/latest/user-data | egrep '^:autostart_terminate: ' | cut -d ' ' -f 2`
 
 touch $DISABLE_FILE
 
@@ -24,6 +25,7 @@ AUTOSTART_FILES=`ls $AUTOSTART_DIR/`
 touch $LOGFILE
 chmod 0600 $LOGFILE
 
+EXIT_STATUS=0
 cd $AUTOSTART_DIR
 for FILE in $AUTOSTART_FILES; do
 	echo ">> Running autostart file $FILE" >> $LOGFILE
@@ -31,10 +33,20 @@ for FILE in $AUTOSTART_FILES; do
 	./$FILE >> $LOGFILE 2>&1
 	if [ $? -ne 0 ]; then
 		echo ">> Quitting autostart early due to failure" >> $LOGFILE
+		EXIT_STATUS=1
 		break
 	fi
 done
 
+if [ $EXIT_STATUS -ne 0 ]; then
+	# Kill the network interface (causing a status check failure)
+	# if the autostart scripts don't complete.
+	if [ "$AUTOSTART_TERMINATE" == "network" ]; then
+		sudo /sbin/ifconfig eth0 down
+	fi
+fi
+
+exit $EXIT_STATUS
 
 # Local Variables:
 # mode: sh
