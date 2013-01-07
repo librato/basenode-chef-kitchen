@@ -34,7 +34,7 @@ function run_script()
 	while [ $ITER -lt $MAX_SCRIPT_TIME_SECS ]; do
 		if [ ! -e /proc/$PID ]; then
 			wait $PID
-			return 0
+			return $?
 		fi
 
 		sleep 1
