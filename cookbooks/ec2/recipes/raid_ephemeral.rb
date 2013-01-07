@@ -101,6 +101,7 @@ ruby_block "create_raid" do
     #
     try = 1
     tries = 3
+    failed_create = false
     begin
       failed_create = false
 
@@ -131,6 +132,8 @@ ruby_block "create_raid" do
         failed_create = true
       end
     end while failed_create && try <= tries
+
+    exit 1 if failed_create
   end
 
   not_if {File.exist?("/dev/md0")}
@@ -151,7 +154,8 @@ end
 ruby_block "mount_raid" do
   block do
     system("mkdir -p #{node[:ec2][:raid_mount]}")
-    system("mount #{node[:ec2][:raid_mount]}")
+    r = system("mount #{node[:ec2][:raid_mount]}")
+    exit 1 unless r
   end
 
   not_if {File.read("/proc/mounts").include?(node[:ec2][:raid_mount])}
