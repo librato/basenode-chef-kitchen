@@ -38,7 +38,7 @@ function run_script()
 		fi
 
 		sleep 1
-		$ITER=$(( $ITER + 1 ))
+		ITER=$(( $ITER + 1 ))
 	done
 
 	echo "ERROR: Timed out running: $SCRIPT" >> $LOGFILE
