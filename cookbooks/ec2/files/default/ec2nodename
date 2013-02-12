@@ -15,7 +15,7 @@ if [ $? -ne 0 ]; then
 fi
 
 NODENAME=`egrep '^:node_name: ' $TMP | cut -d ' ' -f 2`
-INSTANCE=`egrep '^:instance: ' $TMP | cut -d ' ' -f 2`
+INSTANCE=`egrep '^:instance: ' $TMP | cut -d ' ' -f 2 | sed "s/'//g" `
 
 rm -f $TMP
 
