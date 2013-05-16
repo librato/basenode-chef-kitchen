@@ -11,6 +11,12 @@ attrs = {
     :api_token => "",
     :email => ""
   },
+  :sysctl => {
+    :attributes => {
+      "net.core.somaxconn" => 2048,
+      "net.core.netdev_max_backlog" => 2048
+    }
+  }
 }
 
 default_attributes(attrs)
@@ -23,6 +29,7 @@ run_list(["recipe[apt]",
           "recipe[ec2::tools]",
           "recipe[ec2::uniq_name_gen]",
           "recipe[ntp]",
+          "recipe[sysctl]",
           "role[postfix]",
           "recipe[mysql::client]",
           "recipe[collectd]",
