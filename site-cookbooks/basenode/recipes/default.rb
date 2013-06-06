@@ -14,6 +14,9 @@ package "mailutils"
 package "sysstat"
 package "iftop"
 
+package "mdadm"
+package "xfsprogs"
+
 cookbook_file "/usr/local/bin/run_with_env.sh" do
   owner "root"
   mode "0755"
