@@ -14,4 +14,7 @@ default_attributes({
                      }
                    })
 
-run_list(["recipe[java]"])
+run_list([
+          "recipe[java]",
+          "recipe[ec2::java_dns_ttl]"
+         ])
