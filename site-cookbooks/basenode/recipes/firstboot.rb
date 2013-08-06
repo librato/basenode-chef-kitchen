@@ -49,6 +49,9 @@ node[:collectd][:hostname] = nodename
 # Merge collectd librato configuration from userdata
 node[:collectd_librato] = userdata[:collectd_librato]
 
+# Merge any user data into basenode settings
+node[:basenode][:add_users] = userdata[:users] || {}
+
 # Set PS1
 bash "set_ps1" do
   code <<EOH

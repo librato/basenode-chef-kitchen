@@ -12,6 +12,7 @@ attrs = {
 default_attributes(attrs)
 
 run_list(["recipe[basenode::firstboot]",
+          "recipe[basenode::add_users]",
           "recipe[collectd-librato::install]",
           "recipe[ec2::raid_ephemeral]",
           ])
