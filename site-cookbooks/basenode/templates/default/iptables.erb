@@ -1,0 +1,13 @@
+# Allow TCP ports
+#
+<% @tcp_ports.each do |port| %>
+-A FWR -p TCP --dport <%= port.to_s.gsub("-", ":") %> -j ACCEPT
+<% end %>
+
+# Allow UDP ports
+#
+<% @udp_ports.each do |port| %>
+-A FWR -p UDP --dport <%= port.to_s.gsub("-", ":") %> -j ACCEPT
+<% end %>
+
+

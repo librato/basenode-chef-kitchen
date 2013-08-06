@@ -52,6 +52,10 @@ node[:collectd_librato] = userdata[:collectd_librato]
 # Merge any user data into basenode settings
 node[:basenode][:add_users] = userdata[:users] || {}
 
+# Merge any iptables settings
+node[:basenode][:tcp_ports] = userdata[:tcp_ports]
+node[:basenode][:udp_ports] = userdata[:udp_ports]
+
 # Set PS1
 bash "set_ps1" do
   code <<EOH
