@@ -52,6 +52,7 @@ define :create_user, :details => nil do
 
     template "#{home_dir}/.ssh/authorized_keys" do
       source "authorized_keys.erb"
+      cookbook "users"
       owner params[:name]
       group u['gid'] || params[:name]
       mode "0600"
