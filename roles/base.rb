@@ -14,7 +14,13 @@ attrs = {
   :sysctl => {
     :attributes => {
       "net.core.somaxconn" => 2048,
-      "net.core.netdev_max_backlog" => 2048
+      "net.core.netdev_max_backlog" => 2048,
+      "net.core.rmem_max" => 16777216,
+      "net.core.wmem_max" => 16777216,
+      "net.ipv4.tcp_rmem" => "4096 65536 16777216",
+      "net.ipv4.tcp_wmem" => "4096 65536 16777216",
+      "vm.max_map_count" => 1048575,
+      "fs.file-max" => 1048575
     }
   }
 }
