@@ -19,7 +19,6 @@
 
 # XXX: Java 7?
 include_recipe "java"
-include_recipe "runit"
 
 include_recipe "zookeeper::iptables"
 
@@ -85,15 +84,23 @@ bash "copy zk conf" do
   not_if { File.exists? "#{node[:zookeeper][:conf_dir]}/zoo_sample.cfg" }
 end
 
-runit_service "zookeeper" do
-  # XXX: There should be a way to force the environment directory
-  # creation.
-  env 'MY_TEST_VAR' => 'MY_TEST_VALUE'
+template "/etc/init/zookeeper.conf" do
+  source "upstart.conf.erb"
+
+  owner "root"
+  mode "0644"
+
+  variables({ :service => "zookeeper",
+              :java_home => node[:java][:java_home] })
 end
 
 service "zookeeper" do
-  subscribes :restart, resources(:bash => "untar_zookeeper")
+  provider Chef::Provider::Service::Upstart
 end
+
+# service "zookeeper" do
+#   subscribes :restart, resources(:bash => "untar_zookeeper")
+# end
 
 template_variables = {
   :servers           => node[:zookeeper][:servers],
