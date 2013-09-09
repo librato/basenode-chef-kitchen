@@ -1,0 +1,24 @@
+# Start the <%= @service %> server daemon
+#
+author          "Librato <dev@librato.com>"
+description     "Runs the <%= @service %> server daemon"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+env JAVA_HOME="<%= @java_home %>"
+env CLASSPATH="<%= @node[:zookeeper][:conf_dir] %>:/opt/zookeeper/*:/opt/zookeeper/lib/*"
+env ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
+env ZOOCFG="<%= @node[:zookeeper][:conf_dir] %>/zoo.cfg"
+
+<%- if @node[:zookeeper][:max_heap] %>
+JAVA_OPTS="-Xmx<%= @node[:zookeeper][:max_heap] %>"
+<%- end %>
+
+setuid zookeeper
+
+script
+        exec $JAVA_HOME/bin/java $JAVA_OPTS -cp $CLASSPATH $JVMFLAGS $ZOOMAIN $ZOOCFG
+end script

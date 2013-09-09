@@ -10,7 +10,6 @@ supports         "ubuntu"
 # XXX: Java 7?
 depends          "java"
 depends          "iptables"
-depends          "runit"
 
 # XXX: ZK Client?
 recipe           "zookeeper::client", "Installs ZK client"
