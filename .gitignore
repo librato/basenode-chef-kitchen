@@ -7,3 +7,4 @@ nodes/*.json
 auth.cfg
 data_bags/node/*.json
 *.swp
+data_bags/node
