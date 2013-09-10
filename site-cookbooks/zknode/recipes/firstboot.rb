@@ -34,7 +34,6 @@ egrep -v ^server #{node[:zookeeper][:conf_dir]}/zoo.cfg > /tmp/zoo.new.cfg && \
 cat /tmp/zoo-servers.cfg >> /tmp/zoo.new.cfg && \
 cat /tmp/zoo.new.cfg > #{node[:zookeeper][:conf_dir]}/zoo.cfg && \
 echo -n "#{myinst}" > #{node[:zookeeper][:data_dir]}/myid
-/etc/init.d/zookeeper restart
 EOH
 end
 
