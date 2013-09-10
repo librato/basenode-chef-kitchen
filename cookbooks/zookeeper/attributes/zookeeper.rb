@@ -21,6 +21,9 @@ default[:zookeeper][:quorum_port] = 2888
 default[:zookeeper][:leader_elect_port] = 3888
 default[:zookeeper][:max_client_connections] = 100
 
+default[:zookeeper][:snap_retain_count] = 14
+default[:zookeeper][:purge_interval] = 24
+
 # How long to cache DNS entries (JVM option)
 default[:zookeeper][:dns_cache_ttl] = 60
 

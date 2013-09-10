@@ -22,3 +22,16 @@ server.<%= idx %>=<%= address %>:<%= @quorum_port %>:<%= @leader_elect_port %>
 <%- end %>
 
 maxClientCnxns=<%= @max_client_conns || 1000 %>
+
+#
+# Be sure to read the maintenance section of the 
+# administrator guide before turning on autopurge.
+#
+# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
+#
+# The number of snapshots to retain in dataDir
+autopurge.snapRetainCount=<%= @snap_retain_count %>
+
+# Purge task interval in hours
+# Set to "0" to disable auto purge feature
+autopurge.purgeInterval=<%= @purge_interval %>

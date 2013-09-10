@@ -114,6 +114,8 @@ template_variables = {
   :quorum_port       => node[:zookeeper][:quorum_port],
   :leader_elect_port => node[:zookeeper][:leader_elect_port],
   :max_client_conns  => node[:zookeeper][:max_client_connections],
+  :snap_retain_count => node[:zookeeper][:snap_retain_count],
+  :purge_interval    => node[:zookeeper][:purge_interval]
 }
 
 %w[ zoo.cfg log4j.properties].each do |conf_file|

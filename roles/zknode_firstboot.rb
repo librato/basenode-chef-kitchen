@@ -1,5 +1,5 @@
-name "zookeeper"
-description "Create a zookeeper server"
+name "zknode_firstboot"
+description "Zk node firstboot"
 
 attrs = {
   :java => {
@@ -19,5 +19,5 @@ attrs = {
 
 default_attributes(attrs)
 
-run_list(["recipe[zookeeper::server]"
+run_list(["recipe[zknode::firstboot]"
           ])

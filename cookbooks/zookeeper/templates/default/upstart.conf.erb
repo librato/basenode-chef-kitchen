@@ -14,7 +14,7 @@ env ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
 env ZOOCFG="<%= @node[:zookeeper][:conf_dir] %>/zoo.cfg"
 
 <%- if @node[:zookeeper][:max_heap] %>
-JAVA_OPTS="-Xmx<%= @node[:zookeeper][:max_heap] %>"
+env JAVA_OPTS="-Xmx<%= @node[:zookeeper][:max_heap] %>"
 <%- end %>
 
 setuid zookeeper
