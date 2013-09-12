@@ -13,9 +13,9 @@ env CLASSPATH="<%= @node[:zookeeper][:conf_dir] %>:/opt/zookeeper/*:/opt/zookeep
 env ZOOMAIN="org.apache.zookeeper.server.quorum.QuorumPeerMain"
 env ZOOCFG="<%= @node[:zookeeper][:conf_dir] %>/zoo.cfg"
 
-<%- if @node[:zookeeper][:max_heap] %>
-env JAVA_OPTS="-Xmx<%= @node[:zookeeper][:max_heap] %>"
-<%- end %>
+env JAVA_OPTS="-Xms<%= @node[:zookeeper][:min_heap] %> -Xmx<%= @node[:zookeeper][:max_heap] %> -Dcom.sun.management.jmxremote.port=<%= @node[:zookeeper][:jmx_port] %> -Dcom.sun.management.jmxremote.authenticate=false
+-Dcom.sun.management.jmxremote.ssl=false"
+
 
 setuid zookeeper
 

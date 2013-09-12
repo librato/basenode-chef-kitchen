@@ -13,6 +13,8 @@ attrs = {
     }
   },
   :zookeeper => {
+    :jmx_port => 2191,
+    :min_heap => "1G",
     :max_heap => "1G"
   }
 }
