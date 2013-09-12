@@ -3,3 +3,4 @@
 -A FWR -p TCP --dport <%= @client_port %> -j ACCEPT
 -A FWR -p TCP --dport <%= @quorum_port %> -j ACCEPT
 -A FWR -p TCP --dport <%= @leader_elect_port %> -j ACCEPT
+-A FWR -p TCP --dport <%= @jmx_port %> -j ACCEPT
