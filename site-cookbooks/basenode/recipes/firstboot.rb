@@ -49,6 +49,9 @@ node[:collectd][:hostname] = nodename
 # Merge collectd librato configuration from userdata
 node[:collectd_librato] = userdata[:collectd_librato]
 
+# Merge collectd librato configuration from userdata
+node[:papertrail] = userdata[:papertrail]
+
 # Merge any user data into basenode settings
 node[:basenode][:add_users] = userdata[:users] || {}
 
