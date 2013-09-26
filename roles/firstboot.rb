@@ -15,5 +15,6 @@ run_list(["recipe[basenode::firstboot]",
           "recipe[basenode::add_users]",
           "recipe[basenode::iptables]",
           "recipe[collectd-librato::install]",
+          "recipe[papertrail]",
           "recipe[ec2::raid_ephemeral]",
           ])
