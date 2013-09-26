@@ -30,7 +30,7 @@ end
 
 if broker_id
   Chef::Log.info "Got an instance ID of #{broker_id}"
-  node[:uniq_instance_id] = broker_id
+  node.set[:uniq_instance_id] = broker_id
   nodename = "#{userdata[:node_name]}_#{broker_id}"
 end
 
@@ -44,20 +44,20 @@ EOH
 end
 
 # Update the collectd hostname
-node[:collectd][:hostname] = nodename
+node.set[:collectd][:hostname] = nodename
 
 # Merge collectd librato configuration from userdata
-node[:collectd_librato] = userdata[:collectd_librato]
+node.set[:collectd_librato] = userdata[:collectd_librato]
 
 # Merge collectd librato configuration from userdata
-node[:papertrail] = userdata[:papertrail]
+node.set[:papertrail] = userdata[:papertrail]
 
 # Merge any user data into basenode settings
-node[:basenode][:add_users] = userdata[:users] || {}
+node.set[:basenode][:add_users] = userdata[:users] || {}
 
 # Merge any iptables settings
-node[:basenode][:tcp_ports] = userdata[:tcp_ports]
-node[:basenode][:udp_ports] = userdata[:udp_ports]
+node.set[:basenode][:tcp_ports] = userdata[:tcp_ports]
+node.set[:basenode][:udp_ports] = userdata[:udp_ports]
 
 # Set PS1
 bash "set_ps1" do
