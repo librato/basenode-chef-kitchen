@@ -5,3 +5,5 @@ site-cookbooks/*/metadata.json
 roles/*.json
 nodes/*.json
 auth.cfg
+*.swp
+data_bags/node

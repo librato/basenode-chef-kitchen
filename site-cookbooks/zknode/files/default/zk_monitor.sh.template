@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# every 5 mins
+ITER=300
+
+MEASURE_TIME=$(( ($(date '+%s') / ${ITER} ) * ${ITER} ))
+
+SOURCE=`/usr/bin/ec2nodename`
+
+EMAIL="<%= @email %>"
+TOKEN="<%= @api_token %>"
+API="<%= @api %>"
+
+ZK_PORT="2181"
+PAYLOAD="measure_time=${MEASURE_TIME}&source=${SOURCE}"
+
+TMP=`mktemp`
+
+echo stat | nc localhost $ZK_PORT > $TMP
+
+MODE=`egrep ^Mode $TMP | awk '{print $2}'`
+LAT=`egrep ^Latency $TMP | awk '{print $3}' | awk -F '/' '{print $2}'`
+NODES=`egrep '^Node count' $TMP | awk '{print $3}'`
+
+rm $TMP
+
+if [ "$MODE" = "leader" ]; then
+	MODEVAL="1"
+elif [ "$MODE" = "follower" ]; then
+	MODEVAL="0"
+else
+	MODEVAL="2"
+fi
+
+PAYLOAD="${PAYLOAD}&gauges[0][name]=o.a.zookeeper.mode&gauges[0][value]=${MODEVAL}"
+PAYLOAD="${PAYLOAD}&gauges[1][name]=o.a.zookeeper.latency&gauges[1][value]=${LAT}"
+PAYLOAD="${PAYLOAD}&gauges[2][name]=o.a.zookeeper.znodes&gauges[2][value]=${NODES}"
+
+curl -s \
+    -X POST \
+    -g \
+    -u "${EMAIL}:${TOKEN}" \
+    -d ${PAYLOAD} \
+    "https://${API}/v1/metrics"
