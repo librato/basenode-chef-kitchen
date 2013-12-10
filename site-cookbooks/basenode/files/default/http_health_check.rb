@@ -40,8 +40,6 @@ module HttpHealthCheck
 
       pd_integration_url = "https://events.pagerduty.com/generic/2010-04-15/create_event.json"
       RestClient.post(pd_integration_url, post.to_json, :content_type => :json)
-
-      exit 1
     end
   end
 end
