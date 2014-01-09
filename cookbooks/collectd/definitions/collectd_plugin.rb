@@ -17,19 +17,19 @@
 # limitations under the License.
 #
 
-define :collectd_plugin, :options => {}, :template => nil, :cookbook => nil do
+define :collectd_plugin, :options => {}, :template => nil, :cookbook => nil, :load_options => {} do
   template "#{node[:collectd][:plugin_conf_dir]}/#{params[:name]}.conf" do
     owner "root"
     group "root"
     mode "644"
-    if params[:template].blank?
+    if params[:template].nil?
       source "plugin.conf.erb"
       cookbook params[:cookbook] || "collectd"
     else
       source params[:template]
       cookbook params[:cookbook]
     end
-    variables :name=>params[:name], :options=>params[:options]
+    variables :name=>params[:name], :options=>params[:options], :load_options=>params[:load_options]
     notifies :restart, resources(:service => "collectd")
   end
 end
@@ -45,7 +45,7 @@ define :collectd_python_plugin, :options => {}, :module => nil, :path => nil do
     end
     retry
   end
-  if not params[:path].blank?
+  if not params[:path].nil?
     t.variables[:options][:paths] << params[:path]
   end
   t.variables[:options][:modules][params[:module] || params[:name]] = params[:options]
