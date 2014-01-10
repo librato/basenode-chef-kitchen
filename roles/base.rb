@@ -28,8 +28,9 @@ attrs = {
 default_attributes(attrs)
 
 run_list(["recipe[apt]",
-          "recipe[misc::github_whitelist]",
+          "recipe[misc::apt_update]",
           "recipe[misc::apt_upgrade]",
+          "recipe[misc::github_whitelist]",
           "role[ssh]",
           "recipe[ec2::nodename]",
           "recipe[ec2::tools]",
