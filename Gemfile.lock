@@ -1,12 +1,3 @@
-GIT
-  remote: git://github.com/mheffner/knife-github-cookbooks.git
-  revision: 297139f8f4ac33fb7909dcff7956ee65f2d30a63
-  branch: github-api-v3
-  specs:
-    knife-github-cookbooks (0.1.5)
-      chef (~> 0.10.0)
-      launchy (~> 0.4.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -34,6 +25,9 @@ GEM
     highline (1.6.13)
     ipaddress (0.8.0)
     json (1.6.1)
+    knife-github-cookbooks (0.1.8)
+      chef
+      launchy (~> 0.4.0)
     launchy (0.4.0)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
@@ -74,5 +68,5 @@ PLATFORMS
 
 DEPENDENCIES
   chef (~> 0.10.4)
-  knife-github-cookbooks!
+  knife-github-cookbooks
   rake (~> 0.8.7)
