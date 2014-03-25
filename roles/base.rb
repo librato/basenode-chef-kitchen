@@ -42,6 +42,7 @@ run_list(["recipe[apt]",
           "recipe[collectd]",
           "recipe[collectd-librato::build]",
           "recipe[misc::collectd]",
+          "role[statsite]",
           "role[papertrail]",
           "role[java]",
           "recipe[basenode::setup_firstboot]"
