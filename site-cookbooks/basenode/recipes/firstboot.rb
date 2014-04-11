@@ -59,6 +59,26 @@ node.set[:basenode][:add_users] = userdata[:users] || {}
 node.set[:basenode][:tcp_ports] = userdata[:tcp_ports]
 node.set[:basenode][:udp_ports] = userdata[:udp_ports]
 
+if userdata[:statsite]
+  # Update the statsite configuration
+  bash "update_statsite_config" do
+    code <<EOH
+sed -i \
+    -e 's/%%EMAIL%%/#{userdata[:statsite][:email]}/g' \
+    -e 's/%%TOKEN%%/#{userdata[:statsite][:api_token]}/g' \
+    -e 's@%%API%%@#{userdata[:statsite][:api]}@g' \
+    -e 's/%%HOSTNAME%%/#{nodename}/g' \
+    -e 's/%%INTERVAL%%/#{userdata[:statsite][:interval]}/g' \
+    /etc/statsite/librato.conf && \
+sed -i \
+    -e 's/%%INTERVAL%%/#{userdata[:statsite][:interval]}/g' \
+    /etc/statsite.conf && \
+/sbin/start statsite
+EOH
+  end
+
+end
+
 # Set PS1
 bash "set_ps1" do
   code <<EOH
