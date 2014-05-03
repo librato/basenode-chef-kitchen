@@ -42,6 +42,7 @@ node['java']['jdk'].each do |jdk_version, arch_hash|
     url tarball_url
     checksum tarball_checksum
     app_home java_home
+    link "#{java_home}/../jdk#{jdk_version}"  # XXX: reference JVM's by version
     bin_cmds ["java", "jar"]
     action :install
   end

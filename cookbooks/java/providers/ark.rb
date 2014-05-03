@@ -115,6 +115,11 @@ action :install do
       FileUtils.rm_f app_home
       FileUtils.ln_sf app_dir, app_home
     end
+    if new_resource.link
+      Chef::Log.debug "symlinking #{app_dir} to #{new_resource.link}"
+      FileUtils.rm_f new_resource.link
+      FileUtils.ln_sf app_dir, new_resource.link
+    end
     if new_resource.bin_cmds
       new_resource.bin_cmds.each do |cmd|
         if ::File.exists? "/usr/bin/#{cmd}"
