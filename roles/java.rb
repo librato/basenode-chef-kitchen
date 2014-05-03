@@ -4,7 +4,7 @@ description "Install Oracle Java VM"
 default_attributes({
                      :java => {
                        :install_flavor => 'oracle',
-                       :jdk_version => '7',
+                       :arch => "x86_64",
                        :jdk => {
                          "7" => {
                            :x86_64 => {
@@ -14,7 +14,7 @@ default_attributes({
                          },
                          "8" => {
                            :x86_64 => {
-                             :url => "http://s3.amazonaws.com/librato_download/chef/jdk-8u5-linux-x64.tar.gz",
+                             :url => "http://s3.amazonaws.com/librato_download/chef/jdk1.8.0_05.tar.gz",
                              :checksum => "44901389e9fb118971534ad0f58558ba8c43f315b369117135bd6617ae631edc"
                            }
                          }

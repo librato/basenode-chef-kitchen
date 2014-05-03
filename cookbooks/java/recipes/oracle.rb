@@ -20,31 +20,6 @@
 
 java_home = node['java']["java_home"]
 arch = node['java']['arch']
-jdk_version = node['java']['jdk_version']
-
-#convert version number to a string if it isn't already
-if jdk_version.instance_of? Fixnum
-  jdk_version = jdk_version.to_s
-end
-
-case jdk_version
-when "6"
-  tarball_url = node['java']['jdk']['6'][arch]['url']
-  tarball_checksum = node['java']['jdk']['6'][arch]['checksum']
-when "7"
-  tarball_url = node['java']['jdk']['7'][arch]['url']
-  tarball_checksum = node['java']['jdk']['7'][arch]['checksum']
-end
-
-if tarball_url =~ /example.com/
-  Chef::Application.fatal!("You must change the download link to your private repository. You can no longer download java directly from http://download.oracle.com without a web broswer")
-end
-
-ruby_block  "set-env-java-home" do
-  block do
-    ENV["JAVA_HOME"] = java_home
-  end
-end
 
 file "/etc/profile.d/jdk.sh" do
   content <<-EOS
@@ -53,12 +28,21 @@ file "/etc/profile.d/jdk.sh" do
   mode 0755
 end
 
+node['java']['jdk'].each do |jdk_version, arch_hash|
+  tarball_url = arch_hash[arch]['url']
+  tarball_checksum = arch_hash[arch]['checksum']
 
-java_ark "jdk" do
-  url tarball_url
-  checksum tarball_checksum
-  app_home java_home
-  bin_cmds ["java", "jar"]
-  action :install
+  ruby_block  "set-env-java#{jdk_version}-home" do
+    block do
+      ENV["JAVA_HOME"] = java_home
+    end
+  end
+
+  java_ark "jdk#{jdk_version}" do
+    url tarball_url
+    checksum tarball_checksum
+    app_home java_home
+    bin_cmds ["java", "jar"]
+    action :install
+  end
 end
-
