@@ -7,9 +7,9 @@ default[:ec2][:raid_mount] = "/raid0"
 
 # EC2 AMI tools
 
-default[:ec2][:ami_tools_version] = "1.4.0.9"
-default[:ec2][:ami_tools_url] = "http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools.zip"
-default[:ec2][:ami_tools_sha] = "9876de865e55053578d5d716d4325166262f7ee9e965e2987103b21b45969745"
+default[:ec2][:ami_tools_version] = "1.5.2"
+default[:ec2][:ami_tools_url] = "http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools-1.5.2.zip"
+default[:ec2][:ami_tools_sha] = "0c3c20491a3631c92d21c205354d2ac21a872ba502173aa5e3c79ad1d8a27ea2"
 default[:ec2][:ami_tools_install_dir] = "/opt"
 
 # Java DNS TTL

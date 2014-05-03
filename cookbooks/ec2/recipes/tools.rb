@@ -22,10 +22,12 @@ end
 
 package "ec2-api-tools"
 #package "ec2-ami-tools"
-
 #
 # Install latest AMI tools from S3. APT version is too old.
 #
+
+# This is needed by the latest ec2-ami-tools (1.5.2)
+package "kpartx"
 
 directory "/opt/src" do
   action :create
@@ -43,7 +45,7 @@ dir = File.join(node[:ec2][:ami_tools_install_dir],
 package "unzip"
 bash "unzip-ec2-ami-tools" do
   code <<EOH
-unzip /opt/src/ec2-ami-tools.zip -d #{node[:ec2][:ami_tools_install_dir]}
+unzip -o /opt/src/ec2-ami-tools.zip -d #{node[:ec2][:ami_tools_install_dir]}
 EOH
   creates dir
 end
@@ -55,10 +57,10 @@ ruby_block "install_ami_tools" do
       base = File.basename(f)
       File.open("/usr/bin/#{base}", "w", 0755) do |wf|
         File.readlines(f).each do |l|
-          if l =~ /^home=/
+          wf.print l
+          if l =~ /^#!\/bin\/bash/
             wf.puts "export EC2_AMITOOL_HOME=#{dir}"
           end
-          wf.print l
         end
       end
     end
