@@ -114,9 +114,23 @@ ruby_block "create_raid" do
       end
       system("sleep 5")
 
-      r = system("mdadm --detail --scan >> /etc/mdadm/mdadm.conf")
-      puts "Failed to initialize raid device" unless r
-      system("sleep 10")
+      # Write out the ARRAY details to mdadm.conf. Only use the
+      # UUID to increase chance it will be found after a restart.
+      #
+      uuid = %x{mdadm --detail /dev/md0 | grep UUID}.chomp
+      if uuid.length > 0
+        uuid = uuid.split(" ").last
+        File.open("/etc/mdadm/mdadm.conf", "a") do |f|
+          f << "ARRAY /dev/md0 UUID=#{uuid}\n"
+        end
+        system("sleep 5")
+      else
+        puts "Failed to initialize raid device"
+      end
+
+      # Put the raid device into the ramfs
+      r = system("update-initramfs -u")
+      puts "Failed to update the initramfs" unless r
 
       r = system("blockdev --setra #{node[:ec2][:raid_read_ahead]} /dev/md0")
       puts "Failed to set read-ahead" unless r
