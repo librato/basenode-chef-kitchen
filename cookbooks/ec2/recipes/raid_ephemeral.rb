@@ -160,3 +160,15 @@ ruby_block "mount_raid" do
 
   not_if {File.read("/proc/mounts").include?(node[:ec2][:raid_mount])}
 end
+
+# The daily mdadm scan will not run unless it knows where to send the results
+ruby_block "add_email_address_to_mdadm_config" do
+  block do
+    File.open("/etc/mdadm/mdadm.conf", "a") do |f|
+      f << "MAILADDR root\n"
+    end
+  end
+
+  not_if {File.read("/etc/mdadm/mdadm.conf").include?("MAILADDR")}
+end
+
