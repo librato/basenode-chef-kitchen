@@ -11,20 +11,23 @@ myaz = %x{curl -s http://169.254.169.254/latest/meta-data/placement/availability
 
 Chef::Log.info("userdata == #{userdata.inspect}")
 
-# Try to acquire a new unique instance ID
 nodename = ""
-broker_id = nil
-1.upto(3) do
-  cmd = "/usr/local/bin/uniq_name_gen.py"
-  nspace = userdata[:uniq_name_gen][:namespace]
-  key = userdata[:uniq_name_gen][:access_key]
-  skey = userdata[:uniq_name_gen][:secret_key]
-  broker_id = %x{#{cmd} #{nspace} #{key} #{skey}}.chomp
-  unless $?.success?
-    broker_id = nil
-    Chef::Log.warn("Failed to acquire a unique instance ID...sleeping for 30 secs")
-    # Randomize sleep time in case of racing
-    sleep 20 + rand(10)
+broker_id = userdata[:instance]
+
+if broker_id.nil? && userdata[:uniq_name_gen]
+  # Try to acquire a new unique instance ID
+  1.upto(3) do
+    cmd = "/usr/local/bin/uniq_name_gen.py"
+    nspace = userdata[:uniq_name_gen][:namespace]
+    key = userdata[:uniq_name_gen][:access_key]
+    skey = userdata[:uniq_name_gen][:secret_key]
+    broker_id = %x{#{cmd} #{nspace} #{key} #{skey}}.chomp
+    unless $?.success?
+      broker_id = nil
+      Chef::Log.warn("Failed to acquire a unique instance ID...sleeping for 30 secs")
+      # Randomize sleep time in case of racing
+      sleep 20 + rand(10)
+    end
   end
 end
 
