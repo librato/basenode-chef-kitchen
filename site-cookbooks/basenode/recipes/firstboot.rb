@@ -75,7 +75,13 @@ sed -i \
     /etc/statsite/librato.conf && \
 sed -i \
     -e 's/%%INTERVAL%%/#{userdata[:statsite][:interval]}/g' \
-    /etc/statsite.conf && \
+    /etc/statsite.conf
+EOH
+  end
+
+  bash "start_statsite" do
+    code <<EOH
+/sbin/stop statsite || true
 /sbin/start statsite
 EOH
   end
@@ -98,3 +104,8 @@ echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
 EOH
 end
 
+if userdata[:jstatd]
+  node.set[:jstatd] = userdata[:jstatd]
+  node.set[:basenode][:tcp_ports].push(node[:jstatd][:port])
+  include_recipe "basenode::jstatd"
+end

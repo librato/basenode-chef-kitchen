@@ -1,5 +1,5 @@
-maintainer       "YOUR_COMPANY_NAME"
-maintainer_email "YOUR_EMAIL"
+maintainer       "Librato"
+maintainer_email "metrics@librato.com"
 license          "All rights reserved"
 description      "Installs/Configures basenode"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
@@ -11,3 +11,4 @@ recipe "basenode::firstboot", "Firstboot scripts"
 recipe "basenode::add_users", "Add users on boot"
 recipe "basenode::iptables", "Set iptables on boot"
 recipe "basenode::statsite", "Setup statsite config files"
+recipe "basenode::jstatd", "Setup jstatd service"

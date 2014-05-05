@@ -1,0 +1,15 @@
+# Jstatd
+#
+author          "Librato <metrics@librato.com>"
+description     "Runs the jstatd daemon"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+setuid <%= @user %>
+
+env JAVA_HOME=<%= @java_home %>
+
+exec <%= @java_home %>/bin/jstatd -J-Djava.security.policy=<%= @policy %> -p <%= @port %>
