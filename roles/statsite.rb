@@ -13,7 +13,7 @@ default_attributes({
                        :token => '%%TOKEN%%',
                        :api => '%%API%%',
                        :source => '%%HOSTNAME%%',
-                       :source_regex => '/^([^-]+)--/',
+                       :source_regex => '%%SOURCE_REGEX%%',
                        :floor_time_secs => "%%INTERVAL%%",
                      },
                    })

@@ -72,6 +72,7 @@ sed -i \
     -e 's@%%API%%@#{userdata[:statsite][:api]}@g' \
     -e 's/%%HOSTNAME%%/#{nodename}/g' \
     -e 's/%%INTERVAL%%/#{userdata[:statsite][:interval]}/g' \
+    -e 's@%%SOURCE_REGEX%%@#{userdata[:statsite][:source_regex] || node[:default_source_regex]}@g' \
     /etc/statsite/librato.conf && \
 sed -i \
     -e 's/%%INTERVAL%%/#{userdata[:statsite][:interval]}/g' \

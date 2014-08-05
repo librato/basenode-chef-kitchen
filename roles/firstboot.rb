@@ -7,6 +7,7 @@ attrs = {
     :hostname => '%%HOSTNAME%%',
     :interval => 60
   },
+  :default_source_regex => '/^([^-]+)--/'
 }
 
 default_attributes(attrs)
