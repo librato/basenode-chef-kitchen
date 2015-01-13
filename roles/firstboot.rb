@@ -15,7 +15,7 @@ default_attributes(attrs)
 run_list(["recipe[basenode::firstboot]",
           "recipe[basenode::add_users]",
           "recipe[basenode::iptables]",
-          "recipe[collectd-librato::install]",
+          "recipe[basenode::collectd_librato]",
           "recipe[papertrail]",
           "recipe[ec2::raid_ephemeral]",
           ])

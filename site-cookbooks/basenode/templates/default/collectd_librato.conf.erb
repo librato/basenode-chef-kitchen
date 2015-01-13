@@ -1,0 +1,9 @@
+LoadPlugin write_http
+
+<Plugin write_http>
+  <URL "<%= @options[:api] %>">
+    User "<%= @options[:email] %>"
+    Password "<%= @options[:token] %>"
+    Format "JSON"
+  </URL>
+</Plugin>

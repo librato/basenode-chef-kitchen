@@ -7,10 +7,6 @@ attrs = {
     :hostname => '%%HOSTNAME%%',
     :interval => 60
   },
-  :collectd_librato => {
-    :api_token => "",
-    :email => ""
-  },
   :sysctl => {
     :attributes => {
       "net.core.somaxconn" => 2048,
@@ -40,7 +36,6 @@ run_list(["recipe[apt]",
           "role[postfix]",
           "recipe[mysql::client]",
           "recipe[collectd]",
-          "recipe[collectd-librato::build]",
           "recipe[misc::collectd]",
           "role[statsite]",
           "role[papertrail]",
