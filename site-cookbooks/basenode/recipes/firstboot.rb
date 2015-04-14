@@ -6,8 +6,8 @@ require 'yaml'
 
 #Load the user-data YAML
 userdata = YAML.load(%x{curl -s http://169.254.169.254/latest/user-data})
-myip = %x{curl -s http://169.254.169.254/latest/meta-data/local-ipv4}.chomp
-myaz = %x{curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone}.chomp
+myip = node['ipaddress']
+myaz = node['ec2']['placement_availability_zone']
 
 Chef::Log.info("userdata == #{userdata.inspect}")
 
@@ -64,7 +64,7 @@ node.set[:basenode][:udp_ports] = userdata[:udp_ports]
 
 if userdata[:statsite]
   # Update the statsite configuration
-  bash "update_statsite_config" do
+  bash 'update_statsite_config' do
     code <<EOH
 sed -i \
     -e 's/%%EMAIL%%/#{userdata[:statsite][:email]}/g' \
@@ -89,8 +89,8 @@ EOH
 
 end
 
-# Set PS1
-bash "set_ps1" do
+# Set PS1 - should really do this as a PS1.conf file in /etc/profile.d
+bash 'set_ps1' do
   code <<EOH
 echo 'export PS1="\\u@#{nodename}:\\w# "' >> /root/.bashrc
 echo 'export PS1="\\u@#{nodename}:\\w$ "' >> ~ubuntu/.bashrc
@@ -98,7 +98,7 @@ EOH
 end
 
 # Add the history format hack so that it shows dates on each command
-bash "add_timestamp_to_history" do
+bash 'add_timestamp_to_history' do
   code <<EOH
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/bash.bashrc
 echo "export HISTTIMEFORMAT='%F %T '" >> /etc/profile
@@ -108,5 +108,15 @@ end
 if userdata[:jstatd]
   node.set[:jstatd] = userdata[:jstatd]
   node.set[:basenode][:tcp_ports].push(node[:jstatd][:port])
-  include_recipe "basenode::jstatd"
+  include_recipe 'basenode::jstatd'
+end
+
+
+ruby_block 'ensure node can resolve its own name' do
+  block do
+    fe = Chef::Util::FileEdit.new("/etc/hosts")
+    fe.insert_line_if_no_match(/#{node['ipaddress']}/,
+                               "#{node['ipaddress']} #{node['fqdn']} #{node['hostname']}")
+    fe.write_file
+  end
 end
