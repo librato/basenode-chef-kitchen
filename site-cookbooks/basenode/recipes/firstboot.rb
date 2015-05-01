@@ -122,7 +122,6 @@ ruby_block 'ensure node can resolve its own name' do
 end
 
 # fix /etc/mailname, /etc/postfix/generic and /etc/posfix/main.cf to use generic use node['fqdn']
-# still have a problem with getting sasl_password set
 file '/etc/mailname' do
   owner 'root'
   group 'root'
@@ -136,6 +135,12 @@ file '/etc/postfix/generic' do
   # this is not very generic anymore
   content node['hostname'] + ".ec2.internal  ops@librato.com\n" + node['hostname'] + ".localdomain   ops@librato.com\n"
 end
+file '/etc/postfix/sasl_passwd' do
+  owner 'root'
+  group 'root'
+  mode  '0400'
+  content  userdata[:postfix][:sasl_auth]
+end
 cookbook_file "/etc/postfix/main.cf" do
   owner "root"
   mode "0444"
@@ -143,12 +148,8 @@ end
 
 bash 'reload postfix' do
   code <<EOH
-/usr/sbin/postmap /etc/postfix/generic
-/usr/sbin/postfix reload
+  /usr/sbin/postmap /etc/postfix/generic
+  /usr/sbin/postmap /etc/postfix/sasl_passwd
+  /usr/sbin/postfix reload
 EOH
 end
-
-
-
-
-
