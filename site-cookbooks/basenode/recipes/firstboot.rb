@@ -120,3 +120,36 @@ ruby_block 'ensure node can resolve its own name' do
     fe.write_file
   end
 end
+
+# fix /etc/mailname, /etc/postfix/generic and /etc/posfix/main.cf to use generic use node['fqdn']
+file '/etc/mailname' do
+  owner 'root'
+  group 'root'
+  mode  '0644'
+  content node['fqdn'] + "\n"
+end
+file '/etc/postfix/generic' do
+  owner 'root'
+  group 'root'
+  mode  '0400'
+  # this is not very generic anymore
+  content node['hostname'] + ".ec2.internal  ops@librato.com\n" + node['hostname'] + ".localdomain   ops@librato.com\n"
+end
+file '/etc/postfix/sasl_passwd' do
+  owner 'root'
+  group 'root'
+  mode  '0400'
+  content  userdata[:postfix][:sasl_auth]
+end
+cookbook_file "/etc/postfix/main.cf" do
+  owner "root"
+  mode "0444"
+end
+
+bash 'reload postfix' do
+  code <<EOH
+  /usr/sbin/postmap /etc/postfix/generic
+  /usr/sbin/postmap /etc/postfix/sasl_passwd
+  /usr/sbin/postfix reload
+EOH
+end
