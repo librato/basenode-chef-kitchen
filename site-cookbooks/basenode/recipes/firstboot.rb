@@ -132,8 +132,7 @@ file '/etc/postfix/generic' do
   owner 'root'
   group 'root'
   mode  '0400'
-  # this is not very generic anymore
-  content "@" + node['hostname'] + ".ec2.internal   " + userdata[:postfix][:sender_address] + "\n" + "@" + node['hostname'] + ".localdomain   " + userdata[:postfix][:sender_address] + "\n"
+  content "@" + node['hostname'] + ".ec2.internal   " + userdata[:postfix][:sender_address] + "\n" + "@" + node['hostname'] + ".localdomain    " + userdata[:postfix][:sender_address] + "\n"
 end
 file '/etc/postfix/sasl_passwd' do
   owner 'root'
