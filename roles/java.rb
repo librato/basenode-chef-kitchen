@@ -14,8 +14,9 @@ default_attributes({
                          },
                          "8" => {
                            :x86_64 => {
-                             :url => "http://s3.amazonaws.com/librato_download/chef/jdk1.8.0_20.tar.gz",
-                             :checksum => "3e717622ae48af5ca7298e7797cb71d4d545238f362741a83e69c097ca055de4"
+                             :url => "http://s3.amazonaws.com/librato_download/chef/jdk1.8.0_60.tar.gz",
+                             # sha256
+                             :checksum => "ebe51554d2f6c617a4ae8fc9a8742276e65af01bd273e96848b262b3c05424e5"
                            }
                          }
                        }
