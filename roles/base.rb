@@ -20,7 +20,8 @@ attrs = {
       "net.netfilter.nf_conntrack_generic_timeout" => 120,
       "net.netfilter.nf_conntrack_max" => 196608
     }
-  }
+  },
+  :ip_conntrack_hashsize => 24576
 }
 
 default_attributes(attrs)
