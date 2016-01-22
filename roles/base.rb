@@ -16,9 +16,12 @@ attrs = {
       "net.ipv4.tcp_rmem" => "4096 65536 16777216",
       "net.ipv4.tcp_wmem" => "4096 65536 16777216",
       "vm.max_map_count" => 1048575,
-      "fs.file-max" => 1048575
+      "fs.file-max" => 1048575,
+      "net.netfilter.nf_conntrack_generic_timeout" => 120,
+      "net.netfilter.nf_conntrack_max" => 196608
     }
-  }
+  },
+  :ip_conntrack_hashsize => 24576
 }
 
 default_attributes(attrs)

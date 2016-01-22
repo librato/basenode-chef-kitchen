@@ -42,6 +42,13 @@ template chefbootsh do
                :chef_solo_dir => "/var/chef/basenode-kitchen"})
 end
 
+bash "setup ipconntrack hashsize" do
+  user "root"
+  code <<EOH
+echo 'options ip_conntrack hashsize=#{node[:ip_conntrack_hashsize]}' >> /etc/modprobe.d/conntrack.conf
+EOH
+end
+
 # Copy chef kitchen to backup location
 bash "backup_chef_kitchen" do
   currloc = %x{cat /etc/chef/solo.rb | egrep ^role_path | cut -d ' ' -f 2}.chomp.
