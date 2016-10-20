@@ -37,3 +37,11 @@ end
     action :install
   end
 end
+
+package "htop" do
+  action :install
+end
+
+package "most" do
+  action :install
+end
